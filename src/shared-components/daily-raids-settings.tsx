@@ -51,23 +51,27 @@ const energyMarks = [
         label: '',
     },
     {
-        value: 288 + 50,
+        value: 288 + 60,
         label: '25 BS',
     },
     {
-        value: 288 + 50 + 100,
+        value: 288 + 60 + 60,
+        label: '25 BS',
+    },
+    {
+        value: 288 + 60 + 60 + 100,
         label: '50 BS',
     },
     {
-        value: 288 + 50 + 100 + 100,
+        value: 288 + 60 + 60 + 100 + 100,
         label: '110 BS',
     },
     {
-        value: 288 + 50 + 100 + 100 + 100,
+        value: 288 + 60 + 60 + 100 + 100 + 100,
         label: '250 BS',
     },
     {
-        value: 288 + 50 + 100 + 100 + 100 + 100,
+        value: 288 + 60 + 60 + 100 + 100 + 100 + 100,
         label: '500 BS',
     },
     {
@@ -85,9 +89,10 @@ const DailyRaidsSettings: React.FC<Props> = ({ close, open }) => {
     const dispatch = useContext(DispatchContext);
     const { dailyRaidsPreferences } = useContext(StoreContext);
     const [dailyRaidsPreferencesForm, setDailyRaidsPreferencesForm] = React.useState(dailyRaidsPreferences);
-    const [dailyEnergy, setDailyEnergy] = React.useState(() =>
-        energyMarks.findIndex(x => x.value === dailyRaidsPreferences.dailyEnergy)
-    );
+    const [dailyEnergy, setDailyEnergy] = React.useState(() => {
+        const index = energyMarks.findIndex(x => x.value === dailyRaidsPreferences.dailyEnergy);
+        return index >= 0 ? index : 0; // Default to first option if not found
+    });
     const [shardsEnergy, setShardsEnergy] = React.useState<number | string>(dailyRaidsPreferences.shardsEnergy);
     const [customLocationsSettings, setCustomLocationsSettings] = React.useState<ICustomDailyRaidsSettings>(
         dailyRaidsPreferences.customSettings ?? defaultCustomSettings
@@ -136,8 +141,8 @@ const DailyRaidsSettings: React.FC<Props> = ({ close, open }) => {
                 <FormGroup style={{ display: 'flex', flexDirection: 'column', gap: 20, padding: '0 20px' }}>
                     <div>
                         <Typography className="flex items-center gap-1">
-                            <b>{energyMarks[dailyEnergy].value}</b> <MiscIcon icon={'energy'} width={20} height={20} />{' '}
-                            per day
+                            <b>{energyMarks[dailyEnergy]?.value || 288}</b>{' '}
+                            <MiscIcon icon={'energy'} width={20} height={20} /> per day
                         </Typography>
                         <Slider
                             aria-label="Restricted values"
